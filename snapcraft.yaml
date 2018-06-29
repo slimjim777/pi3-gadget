@@ -75,7 +75,43 @@ parts:
       - dctrl-tools
       - sed
       - wget
-
+  go:
+    source-tag: go1.9.4
+    source-depth: 1
+  flashback:
+    source: https://github.com/CanonicalLtd/flashback
+    source-type: git
+    plugin: go
+    after: [go]
+    go-importpath: github.com/CanonicalLtd/flashback
+    build: |
+      export GOPATH=$(cd ../go && pwd)
+      GOBIN=$GOPATH/bin
+      PKG=github.com/CanonicalLtd/flashback
+      mkdir -p $GOBIN
+      cd $GOPATH/src/$PKG
+      ./get-deps.sh
+      env GOPATH=$GOPATH GOOS=linux GOARCH=arm go build -o $GOBIN/flashback cmd/flashback/main.go
+      PACKAGES="http://ports.ubuntu.com/ubuntu-ports/dists/xenial/main/binary-armhf/Packages.gz"
+      PKGPATH="$(wget -q -O- $PACKAGES|zcat|grep-dctrl e2fsprogs |\
+        grep e2fsprogs_|grep Filename|tail -1| sed 's/^Filename: //')"
+      wget http://ports.ubuntu.com/ubuntu-ports/$PKGPATH
+      dpkg -x $(basename $PKGPATH) unpack/
+    install: |
+      GOPATH=$(cd ../go && pwd)
+      GOBIN=$GOPATH/bin
+      PKG=github.com/CanonicalLtd/flashback
+      cp -a ../../../psplash/initrd .
+      cp $GOBIN/flashback initrd/bin
+      cp -a $GOPATH/src/$PKG/unpack/sbin/mke2fs initrd/sbin
+      ln -s mke2fs initrd/sbin/mkfs.ext4
+      mkdir -p $SNAPCRAFT_PART_INSTALL/boot-assets
+      cd initrd && find . | cpio --quiet -o -H newc| lzma >>$SNAPCRAFT_PART_INSTALL/boot-assets/psplash.img
+    build-packages:
+      - coreutils
+      - dctrl-tools
+      - sed
+      - wget
 slots:
   bcm-gpio-0:
     interface: gpio
