@@ -1,6 +1,17 @@
 #!/bin/sh -e
 # Run flashback to create a bootprint or factory reset
 
+PREREQS=""
+
+prereqs() { echo "$PREREQS"; }
+
+case "$1" in
+    prereqs)
+    prereqs
+    exit 0
+    ;;
+esac
+
 echo "Run Flashback check-----------------------------"
 
 # Get the restore and writable partitions
