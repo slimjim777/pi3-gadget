@@ -11,3 +11,10 @@ volumes:
         content:
           - source: boot-assets/
             target: /
+      - type: 83
+        filesystem: ext4
+        filesystem-label: restore
+        size: 1024M
+        content:
+          - source: restore-assets/
+            target: /
