@@ -101,14 +101,14 @@ parts:
       GOPATH=$(cd ../go && pwd)
       GOBIN=$GOPATH/bin
       PKG=github.com/CanonicalLtd/flashback
-      cp -a ../../../psplash/initrd .
+      cp -a ../../../flashback/initrd .
       cp $GOBIN/flashback initrd/bin
       cp -a $GOPATH/src/$PKG/unpack/sbin/mke2fs initrd/sbin
       ln -s mke2fs initrd/sbin/mkfs.ext4
       mkdir -p $SNAPCRAFT_PART_INSTALL/restore-assets
-      cp -a ../../../psplash/flashback.yaml $SNAPCRAFT_PART_INSTALL/restore-assets
+      cp -a ../../../flashback/flashback.yaml $SNAPCRAFT_PART_INSTALL/restore-assets
       mkdir -p $SNAPCRAFT_PART_INSTALL/boot-assets
-      cd initrd && find . | cpio --quiet -o -H newc| lzma >>$SNAPCRAFT_PART_INSTALL/boot-assets/psplash.img
+      cd initrd && find . | cpio --quiet -o -H newc| lzma >>$SNAPCRAFT_PART_INSTALL/boot-assets/flashback.img
     build-packages:
       - coreutils
       - dctrl-tools
