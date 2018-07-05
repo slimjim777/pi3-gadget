@@ -33,7 +33,7 @@ if [ ! -f "/restore/bootprint" ]; then
 fi
 
 # Check if we need to perform a factory-reset
-if grep -q reset=factory-reset /proc/cmdline; then
+if grep -q factory-reset /proc/cmdline; then
     echo "Flashback factory-reset--------------------"
 
     # Call flashback to initiate the factory reset

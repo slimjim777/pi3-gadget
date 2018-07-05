@@ -102,6 +102,8 @@ parts:
       GOBIN=$GOPATH/bin
       PKG=github.com/CanonicalLtd/flashback
       cp -a ../../../flashback/initrd .
+      mkdir -p initrd/bin
+      mkdir -p initrd/sbin
       cp $GOBIN/flashback initrd/bin
       cp -a $GOPATH/src/$PKG/unpack/sbin/mke2fs initrd/sbin
       ln -s mke2fs initrd/sbin/mkfs.ext4
